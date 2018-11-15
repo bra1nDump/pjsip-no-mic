@@ -1972,6 +1972,10 @@ static void close_snd_dev(void)
 PJ_DEF(pj_status_t) pjsua_set_snd_dev(int capture_dev,
 				      int playback_dev)
 {
+    PJ_LOG(4, (THIS_FILE, "darkwire: pjsua_aud::pjsua_set_snd_dev (this should preceed \
+        pjsua_set_snd_dev2, and this is were I will set the mode, which will be propagated to the global\
+        variable pjsua_var.snd_mode"));
+
     pjsua_snd_dev_param param;
 
     pjsua_snd_dev_param_default(&param);
@@ -1979,7 +1983,9 @@ PJ_DEF(pj_status_t) pjsua_set_snd_dev(int capture_dev,
     param.capture_dev = capture_dev;
     param.playback_dev = playback_dev;
     /* Always open the sound device. */
-    param.mode = 0;
+    
+    PJ_LOG(4, (THIS_FILE, "darkwire: (same function) setting param.mode to PJSUA_SND_DEV_SPEAKER_ONLY"));
+    param.mode = PJSUA_SND_DEV_SPEAKER_ONLY;
 
     return pjsua_set_snd_dev2(&param);
 }
@@ -1990,6 +1996,9 @@ PJ_DEF(pj_status_t) pjsua_set_snd_dev(int capture_dev,
  */
 PJ_DEF(pj_status_t) pjsua_set_snd_dev2(pjsua_snd_dev_param *snd_param)
 {
+    PJ_LOG(4, (THIS_FILE, "darkwire: pjsua_aud::pjsua_set_snd_dev2 called (this should be comming from pjsua_set_snd_dev\
+        and the snd_param.mode should be "));
+    
     unsigned alt_cr_cnt = 1;
     unsigned alt_cr[] = {0, 44100, 48000, 32000, 16000, 8000};
     unsigned i;
@@ -2074,10 +2083,11 @@ PJ_DEF(pj_status_t) pjsua_set_snd_dev2(pjsua_snd_dev_param *snd_param)
 
 	/* Open! */
 
-    PJ_LOG(1, (THIS_FILE, "kirill: pass PJSUA_SND_DEV_SPEAKER_ONLY param to open_snd_dev"));
+    PJ_LOG(1, (THIS_FILE, "kirill: (this does not make a difference, a global parameter pjsua_var.aud_mode is used for this)\
+         pass PJSUA_SND_DEV_SPEAKER_ONLY param to open_snd_dev"));
     // when actually opening the device, set PJSUA_SND_DEV_SPEAKER_ONLY so no bidirectional stream is created
-	//param.options = 0;
-    param.options = PJSUA_SND_DEV_SPEAKER_ONLY;
+	param.options = 0;
+    //param.options = PJSUA_SND_DEV_SPEAKER_ONLY;
 	status = open_snd_dev(&param);
 	if (status == PJ_SUCCESS)
         PJ_LOG(1, (THIS_FILE, "kirill: device opening succedded"));
