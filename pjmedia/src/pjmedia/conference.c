@@ -532,7 +532,8 @@ PJ_DEF(pj_status_t) pjmedia_conf_create( pj_pool_t *pool,
 					 unsigned options,
 					 pjmedia_conf **p_conf )
 {
-	PJ_LOG(4, (THIS_FILE, "kirill: pjmedia_conf_create called (the options %u parameter has to be set to NO_MIC", options));
+	PJ_LOG(4, (THIS_FILE, "kirill: pjmedia_conf_create called (the options %u parameter has to be set to NO_MIC \
+		: this approach did not work because of a switchboard)", options));
 
     pjmedia_conf *conf;
     const pj_str_t name = { "Conf", 4 };

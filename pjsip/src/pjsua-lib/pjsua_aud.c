@@ -336,8 +336,8 @@ pj_status_t pjsua_aud_subsys_init()
     
     PJ_LOG(4, (THIS_FILE, "kirill: pjsua_aud_subsys_init called, before it did not create audio device \
         attempting to change that from PJMEDIA_CONF_NO_DEVICE to -> PJMEDIA_CONF_NO_MIC"));
-    //opt = PJMEDIA_CONF_NO_DEVICE;
-    opt = PJMEDIA_CONF_NO_MIC;
+    opt = PJMEDIA_CONF_NO_DEVICE;
+    //opt = PJMEDIA_CONF_NO_MIC; did not work because switchboard is used!
 
     if (pjsua_var.media_cfg.quality >= 3 &&
 	pjsua_var.media_cfg.quality <= 4)
@@ -363,6 +363,9 @@ pj_status_t pjsua_aud_subsys_init()
     }
 
     /* Are we using the audio switchboard (a.k.a APS-Direct)? */
+    PJ_LOG(4, (THIS_FILE, "kirill: Are we using the audio switchboard (a.k.a APS-Direct): %d\n \
+        if 1, then setting NO_MIC will not work", pjsua_var.is_mswitch));
+
     pjsua_var.is_mswitch = pjmedia_conf_get_master_port(pjsua_var.mconf)
 			    ->info.signature == PJMEDIA_CONF_SWITCH_SIGNATURE;
 
@@ -1759,6 +1762,7 @@ static pj_status_t open_snd_dev(pjmedia_snd_port_param *param)
     if (pjsua_var.media_cfg.on_aud_prev_rec_frame)
 	param->on_rec_frame = &on_aud_prev_rec_frame;
 
+    PJ_LOG(4, (THIS_FILE, "kirill: this is another place to be able to create speaker only!"));
     PJ_LOG(4,(THIS_FILE, "Opening sound device (%s) %s@%d/%d/%dms",
 	      speaker_only?"speaker only":"speaker + mic",
 	      get_fmt_name(param->base.ext_fmt.id),
@@ -2069,11 +2073,18 @@ PJ_DEF(pj_status_t) pjsua_set_snd_dev2(pjsua_snd_dev_param *snd_param)
 	    goto on_error;
 
 	/* Open! */
-	param.options = 0;
+
+    PJ_LOG(1, (THIS_FILE, "kirill: pass PJSUA_SND_DEV_SPEAKER_ONLY param to open_snd_dev"));
+    // when actually opening the device, set PJSUA_SND_DEV_SPEAKER_ONLY so no bidirectional stream is created
+	//param.options = 0;
+    param.options = PJSUA_SND_DEV_SPEAKER_ONLY;
 	status = open_snd_dev(&param);
 	if (status == PJ_SUCCESS)
+        PJ_LOG(1, (THIS_FILE, "kirill: device opening succedded"));
 	    break;
     }
+
+    PJ_LOG(1, (THIS_FILE, "kirill: device opening failed"));
 
     if (status != PJ_SUCCESS) {
 	pjsua_perror(THIS_FILE, "Unable to open sound device", status);
