@@ -248,8 +248,11 @@ static pj_status_t start_sound_device( pj_pool_t *pool,
 	if (status != PJ_SUCCESS)
 	    return status;
 
+    PJ_LOG(5, (THIS_FILE, "kirill: we really dont want to be here!, start_sound_device, DIR_MEDIA_CAPTURE is set"));
+
 	snd_port->aud_caps = dev_info.caps;
     } else {
+    PJ_LOG(5, (THIS_FILE, "kirill: we really WANT to be here!, start_sound_device, DIR_MEDIA_CAPTURE is not set YEEES"));
 	snd_port->aud_caps = 0;
     }
 
@@ -372,6 +375,8 @@ PJ_DEF(pj_status_t) pjmedia_snd_port_create( pj_pool_t *pool,
 					     unsigned options,
 					     pjmedia_snd_port **p_port)
 {
+    PJ_LOG(4, (THIS_FILE, "kirill: pjmedia_snd_port_create called, ideally we do NOT wat to use it"));
+
     pjmedia_snd_port_param param;
     pj_status_t status;
 
@@ -386,6 +391,9 @@ PJ_DEF(pj_status_t) pjmedia_snd_port_create( pj_pool_t *pool,
     status = pjmedia_aud_dev_default_param(rec_id, &param.base);
     if (status != PJ_SUCCESS)
 	return status;
+
+    // KIRILL TODO (maybe), ideally we do not even want to call this function
+    //param.base.dir = PJMEDIA_DIR_CAPTURE;
 
     param.base.dir = PJMEDIA_DIR_CAPTURE_PLAYBACK;
     param.base.rec_id = rec_id;
@@ -450,6 +458,8 @@ PJ_DEF(pj_status_t) pjmedia_snd_port_create_player( pj_pool_t *pool,
 						    unsigned options,
 						    pjmedia_snd_port **p_port)
 {
+    PJ_LOG(4, (THIS_FILE, "kirill: pjmedia_snd_port_create_player called (idailly we want to use this)"));
+    
     pjmedia_snd_port_param param;
     pj_status_t status;
 

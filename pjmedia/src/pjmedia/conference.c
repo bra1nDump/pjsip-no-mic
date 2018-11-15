@@ -454,6 +454,9 @@ static pj_status_t create_pasv_port( pjmedia_conf *conf,
 static pj_status_t create_sound_port( pj_pool_t *pool,
 				      pjmedia_conf *conf )
 {
+	PJ_LOG(4, (THIS_FILE, "kirill: create_sound_port called (we want to pass a \
+		pjmedia_conf in here that has PJMEDIA_CONF_NO_MIC"));
+
     struct conf_port *conf_port;
     pj_str_t name = { "Master/sound", 12 };
     pj_status_t status;
@@ -529,6 +532,8 @@ PJ_DEF(pj_status_t) pjmedia_conf_create( pj_pool_t *pool,
 					 unsigned options,
 					 pjmedia_conf **p_conf )
 {
+	PJ_LOG(4, (THIS_FILE, "kirill: pjmedia_conf_create called (the options %u parameter has to be set to NO_MIC", options));
+
     pjmedia_conf *conf;
     const pj_str_t name = { "Conf", 4 };
     pj_status_t status;

@@ -333,7 +333,12 @@ pj_status_t pjsua_aud_subsys_init()
 					    1000;
 
     /* Init options for conference bridge. */
-    opt = PJMEDIA_CONF_NO_DEVICE;
+    
+    PJ_LOG(4, (THIS_FILE, "kirill: pjsua_aud_subsys_init called, before it did not create audio device \
+        attempting to change that from PJMEDIA_CONF_NO_DEVICE to -> PJMEDIA_CONF_NO_MIC"));
+    //opt = PJMEDIA_CONF_NO_DEVICE;
+    opt = PJMEDIA_CONF_NO_MIC;
+
     if (pjsua_var.media_cfg.quality >= 3 &&
 	pjsua_var.media_cfg.quality <= 4)
     {

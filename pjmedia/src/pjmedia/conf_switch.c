@@ -222,6 +222,9 @@ PJ_DEF(pj_status_t) pjmedia_conf_create( pj_pool_t *pool,
 					 unsigned options,
 					 pjmedia_conf **p_conf )
 {
+	PJ_LOG(4, (THIS_FILE, "kirill: pjmedia_conf_create (src: pjmedia/conf_switch.c PJMEDIA_CONF_USE_SWITCH_BOARD is set, probably never used) \
+		called (the options %u parameter has to be set to NO_MIC", options));
+
     pjmedia_conf *conf;
     const pj_str_t name = { "Conf", 4 };
     pj_status_t status;
