@@ -289,7 +289,7 @@ static pj_status_t ca_factory_init(pjmedia_aud_dev_factory *f)
  	cdi = &cf->dev_info[i];
  	pj_bzero(cdi, sizeof(*cdi));
  	cdi->dev_id = 0;
- 	strcpy(cdi->info.name, "iPhone IO device");
+ 	strcpy(cdi->info.name, "iPhone IO device looooool");
  	strcpy(cdi->info.driver, "apple");
 
 	PJ_LOG(4, (THIS_FILE, "darkwire: not showing that mic is availabe on the platform"));
