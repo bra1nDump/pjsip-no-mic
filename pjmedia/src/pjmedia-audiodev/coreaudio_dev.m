@@ -243,6 +243,8 @@ pjmedia_aud_dev_factory* pjmedia_coreaudio_factory(pj_pool_factory *pf)
 /* API: init factory */
 static pj_status_t ca_factory_init(pjmedia_aud_dev_factory *f)
 {
+	PJ_LOG(4, (THIS_FILE, "darkwire: ca_factory_init"))
+	
     struct coreaudio_factory *cf = (struct coreaudio_factory*)f;
     AudioComponentDescription desc;
     pj_status_t status;
@@ -289,7 +291,11 @@ static pj_status_t ca_factory_init(pjmedia_aud_dev_factory *f)
  	cdi->dev_id = 0;
  	strcpy(cdi->info.name, "iPhone IO device");
  	strcpy(cdi->info.driver, "apple");
+
+	PJ_LOG(4, (THIS_FILE, "darkwire: not showing that mic is availabe on the platform"));
  	cdi->info.input_count = 1;
+
+
  	cdi->info.output_count = 1;
  	cdi->info.default_samples_per_sec = 8000;
 
@@ -1269,6 +1275,9 @@ static pj_status_t create_audio_unit(AudioComponent io_comp,
 				     struct coreaudio_stream *strm,
 				     AudioUnit *io_unit)
 {
+	PJ_LOG(4, (THIS_FILE, "create_audio_unit, need to have pjmedia_dir not set to PJMEDIA_DIR_CAPTURE"));
+	PJ_LOG(4, (THIS_FILE, "pjmedia_dir: %u", dir));
+
     OSStatus ostatus;
 
 #if !COREAUDIO_MAC
@@ -1283,6 +1292,8 @@ static pj_status_t create_audio_unit(AudioComponent io_comp,
 
     /* Set audio unit's properties for capture device */
     if (dir & PJMEDIA_DIR_CAPTURE) {
+		PJ_LOG(4, (THIS_FILE, "PJMEDIA_DIR_CAPTURE set ==> creating input unit aaaa, thats bad!"));
+
 	UInt32 enable = 1;
 
 	/* Enable input */
@@ -1317,6 +1328,8 @@ static pj_status_t create_audio_unit(AudioComponent io_comp,
 
     /* Set audio unit's properties for playback device */
     if (dir & PJMEDIA_DIR_PLAYBACK) {
+		PJ_LOG(4, (THIS_FILE, "PJMEDIA_DIR_PLAYBACK set ==> creating output unit"));
+
 	UInt32 enable = 1;
 
 	/* Enable output */

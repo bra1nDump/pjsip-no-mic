@@ -509,6 +509,8 @@ PJ_DEF(pj_status_t) pjmedia_aud_stream_create(const pjmedia_aud_param *prm,
 					      void *user_data,
 					      pjmedia_aud_stream **p_aud_strm)
 {
+    PJ_LOG(4, (THIS_FILE, "pjmedia_aud_stream_create with pjmedia_aud_param->dir: %d", prm->dir));
+
     pjmedia_aud_dev_factory *rec_f=NULL, *play_f=NULL, *f=NULL;
     pjmedia_aud_param param;
     pj_status_t status;
@@ -525,6 +527,8 @@ PJ_DEF(pj_status_t) pjmedia_aud_stream_create(const pjmedia_aud_param *prm,
 
     /* Normalize rec_id */
     if (param.dir & PJMEDIA_DIR_CAPTURE) {
+        PJ_LOG(4, (THIS_FILE, "PJMEDIA_DIR_CAPTURE is set (we want that)"));
+
 	unsigned index;
 
 	if (param.rec_id < 0)
@@ -561,6 +565,7 @@ PJ_DEF(pj_status_t) pjmedia_aud_stream_create(const pjmedia_aud_param *prm,
 		     PJMEDIA_EAUD_INVDEV);
 
     /* Create the stream */
+    PJ_LOG(4, (THIS_FILE, "darkwire: this is where we are actually calling coreaudio (creating stream)"));
     status = f->op->create_stream(f, &param, rec_cb, play_cb,
 				  user_data, p_aud_strm);
     if (status != PJ_SUCCESS)

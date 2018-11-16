@@ -225,6 +225,8 @@ PJ_DEF(void) pjmedia_snd_port_param_default(pjmedia_snd_port_param *prm)
 static pj_status_t start_sound_device( pj_pool_t *pool,
 				       pjmedia_snd_port *snd_port )
 {
+    PJ_LOG(4, (THIS_FILE, "darkwire: start_sound_device direction: %d", snd_port->dir));
+
     pjmedia_aud_rec_cb snd_rec_cb;
     pjmedia_aud_play_cb snd_play_cb;
     pjmedia_aud_param param_copy;
@@ -241,6 +243,7 @@ static pj_status_t start_sound_device( pj_pool_t *pool,
 
     /* Get device caps */
     if (snd_port->aud_param.dir & PJMEDIA_DIR_CAPTURE) {
+        PJ_LOG(5, (THIS_FILE, "darkwire: we really dont want to be here!, start_sound_device, DIR_MEDIA_CAPTURE is set"));
 	pjmedia_aud_dev_info dev_info;
 
 	status = pjmedia_aud_dev_get_info(snd_port->aud_param.rec_id, 
@@ -248,11 +251,9 @@ static pj_status_t start_sound_device( pj_pool_t *pool,
 	if (status != PJ_SUCCESS)
 	    return status;
 
-    PJ_LOG(5, (THIS_FILE, "kirill: we really dont want to be here!, start_sound_device, DIR_MEDIA_CAPTURE is set"));
-
 	snd_port->aud_caps = dev_info.caps;
     } else {
-    PJ_LOG(5, (THIS_FILE, "kirill: we really WANT to be here!, start_sound_device, DIR_MEDIA_CAPTURE is not set YEEES"));
+    PJ_LOG(5, (THIS_FILE, "darkwire: we really WANT to be here!, start_sound_device, DIR_MEDIA_CAPTURE is not set YEEES"));
 	snd_port->aud_caps = 0;
     }
 
@@ -326,6 +327,7 @@ static pj_status_t start_sound_device( pj_pool_t *pool,
     }
 
     /* Start sound stream. */
+    PJ_LOG(4, (THIS_FILE, "starting stream..."));
     if (!(snd_port->options & PJMEDIA_SND_PORT_NO_AUTO_START)) {
 	status = pjmedia_aud_stream_start(snd_port->aud_stream);
     }
@@ -458,7 +460,7 @@ PJ_DEF(pj_status_t) pjmedia_snd_port_create_player( pj_pool_t *pool,
 						    unsigned options,
 						    pjmedia_snd_port **p_port)
 {
-    PJ_LOG(4, (THIS_FILE, "kirill: pjmedia_snd_port_create_player called (idailly we want to use this)"));
+    PJ_LOG(4, (THIS_FILE, "darkwire: pjmedia_snd_port_create_player called (idailly we want to use this)"));
     
     pjmedia_snd_port_param param;
     pj_status_t status;
@@ -493,6 +495,8 @@ PJ_DEF(pj_status_t) pjmedia_snd_port_create2(pj_pool_t *pool,
 					     const pjmedia_snd_port_param *prm,
 					     pjmedia_snd_port **p_port)
 {
+    PJ_LOG(4, (THIS_FILE, "darkwire: pjmedia_snd_port_create2 we want prm->base.dir be set to PLAYBACK only"));
+
     pjmedia_snd_port *snd_port;
     pj_status_t status;
     unsigned ptime_usec;
